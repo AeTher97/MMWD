@@ -1,5 +1,4 @@
-
-
+import random
 
 
 class Track:
@@ -31,3 +30,17 @@ class Cab:
     def ShowTracks(self):
         for item in self.Tracks:
             print("ID:"+str(item.ID)+" Start: " + str(item.starting_point),"Finish: " + str(item.ending_point))
+
+def WeightedChoice(objects, weights):
+    totals = []
+    running_total = 0.0
+
+    for w in weights:
+        running_total += w
+        totals.append(running_total)
+
+    rnd = random.random() * running_total
+
+    for i, total in enumerate(totals):
+        if rnd < total:
+            return objects[i]

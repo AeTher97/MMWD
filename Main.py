@@ -1,12 +1,13 @@
 
 from Algorithm import Algorithm
+from Algorithm import Mutation
 from LoadingTracks import LoadTracksFromFile
 
-tracks_list = LoadTracksFromFile.Load("Tracks.txt")
+track_list = LoadTracksFromFile.Load('Tracks.txt')
+cos = Algorithm(track_list,50,50)
 
-algo = Algorithm(4,tracks_list,5,5)
+cos.NewGeneration()
+#cos.ShowSolution()
 
-algo.ShowSolution()
-print("%%%%%%%%%%%%%%%")
-algo.NewGeneration()
-algo.ShowSolution()
+lolz = Mutation()
+print(lolz.GetMutation())
