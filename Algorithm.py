@@ -1,3 +1,5 @@
+import copy
+
 from BasicClasses import Cab, WeightedChoice
 from enum import Enum
 import random
@@ -17,9 +19,11 @@ class Config(Enum):
     Number_of_children = 30
     Selection_method = 1
     Chance_of_crossing = 1
-    Chance_of_mutation = 5
+    Chance_of_mutation = 20
     # Mutation weights
     Mutation_1 = 1
+    Mutation_2 = 10
+    Mutation_3 = 30
     # Cross weights
     Cross_1 = 1
 
@@ -30,6 +34,7 @@ class Solution:
         self.number_of_cabs = number_of_cabs
         self.Cabs = []
         self.fitness = 0
+        self.quality_factors = []
 
     def AddCab(self, Cab):
         self.Cabs.append(Cab)
@@ -50,7 +55,7 @@ class Algorithm:
         for i in range(0, number):
             solution = Solution(self.number_of_cabs)
             for j in range(1, self.number_of_cabs + 1):
-                solution.AddCab(Cab(j, random.randint(1, self.board_size_x), random.randint(1, self.board_size_y)))
+                solution.AddCab(Cab(j, [random.randint(1, self.board_size_x), random.randint(1, self.board_size_y)]))
             for item in self.list_of_tracks:
                 choosed_cab = random.randint(0, self.number_of_cabs - 1)
                 solution.Cabs[choosed_cab].AddTrack(item)
@@ -63,7 +68,7 @@ class Algorithm:
 
             print("SOLUTION: ", str(i))
             for item in solution.Cabs:
-                print("Cab " + str(item.ID) + " Start point:" + str(item.start_point) + "," + str(item.ending_point))
+                print("Cab " + str(item.ID) + " Start point:" + str(item.start_point))
                 item.ShowTracks()
                 print("\n")
             i = i + 1
@@ -72,7 +77,11 @@ class Algorithm:
 
 
     def NewGeneration(self):
-        parents = self.selection_function(self.solutions, self.list_of_tracks)
+        result = self.selection_function(self.solutions, self.list_of_tracks)
+        parents = result[0]
+        untouchable = result[1]
+        for solution in untouchable:
+            parents.append(copy.deepcopy(solution))
 
         Mutation_object = Mutation()
         Cross_object = Crossing()
@@ -90,20 +99,22 @@ class Algorithm:
             picked_operation = WeightedChoice(operations,[Config.Chance_of_mutation.value,Config.Chance_of_crossing.value])
             if picked_operation == choosed_crossing:
                 solution_b = WeightedChoice(parents,weights)
+                while (solution_b == solution):
+                    solution_b = WeightedChoice(parents, weights)
                 new_solution = choosed_crossing.Cross(solution,solution_b)
                 CompleteSolution(new_solution,self.list_of_tracks)
                 children.append(new_solution)
-                print("crossing")
             else:
                 new_solution = choosed_mutation.Mutate(solution)
                 CompleteSolution(new_solution,self.list_of_tracks)
                 children.append(new_solution)
-                print("mutating")
+        for solution in untouchable:
+            children.append(solution)
 
         self.solutions = children
 
 def CompleteSolution(solution,list_of_tracks):
-    total_list = list_of_tracks
+    total_list = copy.deepcopy(list_of_tracks)
 
     for cab in solution.Cabs:
         list_to_remove = []
@@ -148,7 +159,7 @@ class Crossing_1:
             #    cut_cab_a) + " b: " + str(cut_cab_b))  # cos
             temp_a = cab_a.Tracks[:cut_cab_a] + cab_b.Tracks[cut_cab_b:]
             temp_b = cab_b.Tracks[:cut_cab_b] + cab_a.Tracks[cut_cab_a:]
-            new_cab = Cab(cab_a.ID, cab_a.start_point, cab_a.ending_point)
+            new_cab = Cab(cab_a.ID, cab_a.start_point)
             new_cab.Tracks = temp_a
             new_solution.Cabs.append(new_cab)
 
@@ -159,13 +170,52 @@ class Mutation_1:
     weight = Config.Mutation_1.value
 
     def Mutate(self,solution):
-        return solution
+        new_solution = copy.deepcopy(solution)
+        cab = random.choice(new_solution.Cabs)
+        random.shuffle(cab.Tracks)
+        return new_solution
+
+class Mutation_2:
+    weight = Config.Mutation_2.value
+
+    def Mutate(self,solution):
+        new_solution = copy.deepcopy(solution)
+        cab_1 = random.choice(new_solution.Cabs)
+        cab_2 = random.choice(new_solution.Cabs)
+        while cab_1 == cab_2:
+            cab_2 = random.choice(new_solution.Cabs)
+        if(len(cab_1.Tracks)>0 and len(cab_2.Tracks)>0):
+            track_1 = random.choice(cab_1.Tracks)
+            track_2 = random.choice(cab_2.Tracks)
+
+            cab_1.Tracks.append(track_2)
+            cab_2.Tracks.append(track_1)
+
+            cab_1.Tracks.remove(track_1)
+            cab_2.Tracks.remove(track_2)
+
+        return new_solution
+
+class Mutation_3:
+    weight = Config.Mutation_3.value
+
+    def Mutate(self,solution):
+        new_solution = copy.deepcopy(solution)
+        cab = random.choice(new_solution.Cabs)
+        if(len(cab.Tracks)>=2):
+            track_number = random.randint(0,len(cab.Tracks)-2)
+            if(cab.Tracks[track_number].start_time > cab.Tracks[track_number+1].start_time):
+                cab.Tracks[track_number] , cab.Tracks[track_number+1] =  cab.Tracks[track_number+1] , cab.Tracks[track_number]
+
+        return new_solution
 
 
 class Mutation:
     def __init__(self):
         self.list_of_mutations = []
         self.list_of_mutations.append(Mutation_1())
+        self.list_of_mutations.append(Mutation_2())
+        self.list_of_mutations.append(Mutation_3())
         # add new mutations
 
     def GetMutation(self):

@@ -1,9 +1,9 @@
-ID:291 Start:10,21 Finish:2,5
-ID:422 Start:21,2 Finish:3,1
-ID:3 Start:321,1 Finish:0,9
-ID:21 Start:13,21 Finish:2,5
-ID:412 Start:21,2 Finish:3,1
-ID:4 Start:33,1 Finish:0,9
-ID:2541 Start:50,21 Finish:2,5
-ID:442 Start:21,2 Finish:3,1
-ID:1 Start:45,1 Finish:0,9
+ID:291 Start:10,21 Finish:2,5 Time:0 Money:5
+ID:422 Start:21,2 Finish:3,1 Time:46 Money:5
+ID:3 Start:21,1 Finish:0,9 Time:80 Money:5
+ID:21 Start:13,21 Finish:2,5 Time:300 Money:5
+ID:412 Start:21,2 Finish:3,1 Time:32 Money:5
+ID:4 Start:33,1 Finish:0,9 Time:500 Money:5
+ID:2541 Start:50,21 Finish:2,5 Time:930 Money:5
+ID:442 Start:21,2 Finish:3,1 Time:2 Money:5
+ID:1 Start:45,1 Finish:0,9 Time:1500 Money:5bunn
