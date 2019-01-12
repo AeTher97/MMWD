@@ -27,20 +27,20 @@ def RankingSelection(solutions, tracks):
 
 def Roulette_wheel_selection(solutions, tracks):
     weights = []
-    i = 1
+
     for solution in solutions:
-        solution.fitness = EvaluateSolution(solution, tracks)
-        print("Solution " + str(i))
-        print([solution.fitness,solution.quality_factors])
-        weights.append(solution.fitness)
-        i+= 1
+        EvaluateSolution(solution, tracks)
 
     new_generation = []
     solutions.sort(key=lambda x: x.fitness, reverse=True)
     untouchable_solutions = solutions[:Config.Number_of_untouchable_solutions.value]
-    solutions = solutions[Config.Number_of_untouchable_solutions:]
-
+    solutions = solutions[Config.Number_of_untouchable_solutions.value:]
+    for solution in solutions:
+        weights.append(solution.fitness)
     for i in range(1, Config.Number_to_pass_roulette.value):
         new_generation.append(WeightedChoice(solutions, weights))
 
+    for solution in new_generation:
+        if solution == None:
+            new_generation.remove(solution)
     return [new_generation,untouchable_solutions]

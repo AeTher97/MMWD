@@ -4,6 +4,7 @@ from BasicClasses import Cab, WeightedChoice
 from enum import Enum
 import random
 from SelectionFunctions import RankingSelection, Roulette_wheel_selection
+from EvaluationMock import Distance
 
 
 ### Selection methods
@@ -13,17 +14,18 @@ selection_functions = [RankingSelection, Roulette_wheel_selection]
 
 class Config(Enum):
     # Problem Data
-    Number_of_cabs = 3
+    Number_of_cabs = 2
     # New generation creation
     Number_of_initial_solutions = 20
     Number_of_children = 30
-    Selection_method = 1
-    Chance_of_crossing = 1
+    Selection_method = 2
+    Chance_of_crossing = 20
     Chance_of_mutation = 20
     # Mutation weights
-    Mutation_1 = 1
-    Mutation_2 = 10
-    Mutation_3 = 30
+    Mutation_1 = 6
+    Mutation_2 = 2
+    Mutation_3 = 10
+    Mutation_4 = 2
     # Cross weights
     Cross_1 = 1
 
@@ -56,9 +58,10 @@ class Algorithm:
             solution = Solution(self.number_of_cabs)
             for j in range(1, self.number_of_cabs + 1):
                 solution.AddCab(Cab(j, [random.randint(1, self.board_size_x), random.randint(1, self.board_size_y)]))
+            z = 0
             for item in self.list_of_tracks:
-                choosed_cab = random.randint(0, self.number_of_cabs - 1)
-                solution.Cabs[choosed_cab].AddTrack(item)
+                solution.Cabs[z%self.number_of_cabs].AddTrack(item)
+                z+=1
 
             self.solutions.append(solution)
 
@@ -79,6 +82,7 @@ class Algorithm:
     def NewGeneration(self):
         result = self.selection_function(self.solutions, self.list_of_tracks)
         parents = result[0]
+
         untouchable = result[1]
         for solution in untouchable:
             parents.append(copy.deepcopy(solution))
@@ -101,10 +105,14 @@ class Algorithm:
                 solution_b = WeightedChoice(parents,weights)
                 while (solution_b == solution):
                     solution_b = WeightedChoice(parents, weights)
+                if(solution_b == None or solution == None):
+                    continue
                 new_solution = choosed_crossing.Cross(solution,solution_b)
                 CompleteSolution(new_solution,self.list_of_tracks)
                 children.append(new_solution)
             else:
+                if (solution == None):
+                    continue
                 new_solution = choosed_mutation.Mutate(solution)
                 CompleteSolution(new_solution,self.list_of_tracks)
                 children.append(new_solution)
@@ -203,9 +211,27 @@ class Mutation_3:
         new_solution = copy.deepcopy(solution)
         cab = random.choice(new_solution.Cabs)
         if(len(cab.Tracks)>=2):
-            track_number = random.randint(0,len(cab.Tracks)-2)
-            if(cab.Tracks[track_number].start_time > cab.Tracks[track_number+1].start_time):
-                cab.Tracks[track_number] , cab.Tracks[track_number+1] =  cab.Tracks[track_number+1] , cab.Tracks[track_number]
+            track_number = random.randint(0,len(cab.Tracks)-1)
+            track_number_2 = random.randint(0, len(cab.Tracks) - 1)
+            while track_number_2 == track_number:
+                track_number_2 = random.randint(0,len(cab.Tracks)-1)
+            if(cab.Tracks[track_number].start_time > cab.Tracks[track_number_2].start_time):
+                cab.Tracks[track_number] , cab.Tracks[track_number_2] =  cab.Tracks[track_number_2] , cab.Tracks[track_number]
+
+        return new_solution
+
+
+class Mutation_4:
+    weight = Config.Mutation_4.value
+
+    def Mutate(self,solution):
+        new_solution = copy.deepcopy(solution)
+        cab = random.choice(new_solution.Cabs)
+        if (len(cab.Tracks) >= 3):
+            track_number = random.randint(1, len(cab.Tracks) - 2)
+            if Distance(cab.Tracks[track_number-1].ending_point,cab.Tracks[track_number+1].starting_point) <  Distance(cab.Tracks[track_number-1].ending_point,cab.Tracks[track_number].starting_point):
+                cab.Tracks[track_number], cab.Tracks[track_number + 1] = cab.Tracks[track_number + 1], cab.Tracks[
+                    track_number]
 
         return new_solution
 
@@ -216,6 +242,7 @@ class Mutation:
         self.list_of_mutations.append(Mutation_1())
         self.list_of_mutations.append(Mutation_2())
         self.list_of_mutations.append(Mutation_3())
+        self.list_of_mutations.append(Mutation_4())
         # add new mutations
 
     def GetMutation(self):
