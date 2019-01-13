@@ -16,7 +16,7 @@ def clear():
 
 
 #RandomGenerate(20,30,30,2000)
-iterations = 5000
+iterations = 1000
 
 
 
@@ -37,10 +37,10 @@ for i in range(0,iterations):
 
         for solution in wynik:
             EvaluateSolution(solution, track_list)
-        wynik.sort(key=lambda x: x.fitness, reverse=False)
+        wynik.sort(key=lambda x: x.fitness, reverse=True)
 
 
-        solution = wynik[-1]
+        solution = wynik[0]
 
         print("\n[Money [Idle time, Time with passenger, Time traveligh between tracks, Time busy, Distances to trascks, Overall distance, Tracks completed]" + str([solution.fitness, solution.quality_factors]))
 

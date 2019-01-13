@@ -16,9 +16,9 @@ class Config(Enum):
     # Problem Data
     Number_of_cabs = 2
     # New generation creation
-    Number_of_initial_solutions = 20
-    Number_of_children = 30
-    Selection_method = 2
+    Number_of_initial_solutions = 30
+    Number_of_children = 40
+    Selection_method = 1
     Chance_of_crossing = 20
     Chance_of_mutation = 20
     # Mutation weights
@@ -103,8 +103,6 @@ class Algorithm:
             picked_operation = WeightedChoice(operations,[Config.Chance_of_mutation.value,Config.Chance_of_crossing.value])
             if picked_operation == choosed_crossing:
                 solution_b = WeightedChoice(parents,weights)
-                while (solution_b == solution):
-                    solution_b = WeightedChoice(parents, weights)
                 if(solution_b == None or solution == None):
                     continue
                 new_solution = choosed_crossing.Cross(solution,solution_b)

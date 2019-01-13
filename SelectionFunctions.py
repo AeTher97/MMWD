@@ -5,9 +5,9 @@ from enum import Enum
 
 class Config(Enum):
     # Selection Funcions parameters
-    Number_to_pass_ranking = 5
-    Number_to_pass_roulette = 5
-    Number_of_untouchable_solutions = 2
+    Number_to_pass_ranking = 15
+    Number_to_pass_roulette = 15
+    Number_of_untouchable_solutions = 10
 
 
 def RankingSelection(solutions, tracks):
