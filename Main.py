@@ -14,7 +14,7 @@ from RandomGenerator import RandomGenerate
 
 
 
-RandomGenerate(30,50,50,2000)
+#RandomGenerate(30,50,50,2000)
 iterations = 500
 
 x = []
