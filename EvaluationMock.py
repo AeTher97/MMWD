@@ -106,7 +106,7 @@ def EvaluateTaxi(cab):
                 turn_number += 1
                 riding_with_passenger += 1
                 busy_time += 1
-
+   # print(wait_time)
 
     distance_covered = riding_without_passenger + riding_with_passenger
 

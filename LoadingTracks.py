@@ -1,5 +1,5 @@
 import re
-from BasicClasses import Track
+from BasicClasses import Track,Cab
 from EvaluationMock import Distance
 
 class LoadTracksFromFile:
@@ -37,3 +37,24 @@ class LoadTracksFromFile:
 
         print("Total money to make: " + str(total_money) + " Total time: " + str(total_time) + " Latest Finish: " + str(latest_finish))
         return track_list
+
+class LoadCabsFromFile:
+    @staticmethod
+    def Load(filepath):
+        cabs_list = []
+        File = open(filepath, "r")
+        for Line in File:
+            outputs = Line.split(' ')
+
+            Start_outputs = outputs[1].split(',')
+
+
+            ID = re.search(r"(?P<ID>[\d]+)", outputs[0]).group()
+            Start_a = int(re.search(r"(?P<ID>[\d]+)", Start_outputs[0]).group())
+            Start_b = int(re.search(r"(?P<ID>[\d]+)", Start_outputs[1]).group())
+
+
+
+            cabs_list.append(Cab(ID, [Start_a, Start_b]))
+
+        return cabs_list

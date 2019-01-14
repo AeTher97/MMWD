@@ -18,14 +18,14 @@ class Config(Enum):
     # New generation creation
     Number_of_initial_solutions = 30
     Number_of_children = 40
-    Selection_method = 1
+    Selection_method = 2
     Chance_of_crossing = 20
     Chance_of_mutation = 20
     # Mutation weights
     Mutation_1 = 6
-    Mutation_2 = 2
-    Mutation_3 = 10
-    Mutation_4 = 2
+    Mutation_2 = 10
+    Mutation_3 = 15
+    Mutation_4 = 4
     # Cross weights
     Cross_1 = 1
 
@@ -43,21 +43,24 @@ class Solution:
 
 
 class Algorithm:
-    def __init__(self, _list_of_tracks, _board_size_x, _board_size_y, _number_of_cabs=Config.Number_of_cabs.value):
+    def __init__(self, _list_of_tracks,list_of_cabs, _board_size_x, _board_size_y):
         self.selection_function = selection_functions[Config.Selection_method.value-1]
         self.solutions = []
-        self.number_of_cabs = _number_of_cabs
+        self.number_of_cabs = len(list_of_cabs)
         self.list_of_tracks = _list_of_tracks
         self.board_size_x = _board_size_x
         self.board_size_y = _board_size_y
+        self.Cabs = list_of_cabs
         self.GenereateBasicSolutions(Config.Number_of_initial_solutions.value)
+        self.best_solution = None
+
 
     def GenereateBasicSolutions(self, number):
 
         for i in range(0, number):
             solution = Solution(self.number_of_cabs)
-            for j in range(1, self.number_of_cabs + 1):
-                solution.AddCab(Cab(j, [random.randint(1, self.board_size_x), random.randint(1, self.board_size_y)]))
+            for cab in self.Cabs:
+                solution.AddCab(copy.deepcopy(cab))
             z = 0
             for item in self.list_of_tracks:
                 solution.Cabs[z%self.number_of_cabs].AddTrack(item)
@@ -80,7 +83,7 @@ class Algorithm:
 
 
     def NewGeneration(self):
-        result = self.selection_function(self.solutions, self.list_of_tracks)
+        result = self.selection_function(self.solutions, self.list_of_tracks,self)
         parents = result[0]
 
         untouchable = result[1]
@@ -95,7 +98,7 @@ class Algorithm:
             weights.append(1)
 
 
-        for i in range(0,Config.Number_of_children.value):
+        for i in range(0,Config.Number_of_children.value-len(untouchable)):
             solution = parents[i%len(parents)]
             choosed_mutation = Mutation_object.GetMutation()
             choosed_crossing = Cross_object.GetCrossing()
@@ -188,7 +191,7 @@ class Mutation_2:
         new_solution = copy.deepcopy(solution)
         cab_1 = random.choice(new_solution.Cabs)
         cab_2 = random.choice(new_solution.Cabs)
-        while cab_1 == cab_2:
+        while cab_1 == cab_2 and Config.Number_of_cabs.value != 1:
             cab_2 = random.choice(new_solution.Cabs)
         if(len(cab_1.Tracks)>0 and len(cab_2.Tracks)>0):
             track_1 = random.choice(cab_1.Tracks)
