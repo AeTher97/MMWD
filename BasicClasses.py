@@ -2,7 +2,7 @@ import random
 
 
 class Track:
-    def __init__(self,_ID,_starting_point_a,_starting_point_b,_ending_point_a,_ending_point_b,start_time,reward,punishment = 0,is_wait = False,wait_time = 0):
+    def __init__(self,_ID,_starting_point_a,_starting_point_b,_ending_point_a,_ending_point_b,start_time,reward,punishment ,is_wait = False,wait_time = 0):
         self.is_wait = is_wait
         if self.is_wait:
             self.wait_time = wait_time

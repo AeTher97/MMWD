@@ -23,19 +23,21 @@ class LoadTracksFromFile:
             Finish_b = int(re.search(r"(?P<ID>[\d]+)", End_outputs[1]).group())
             Time = int(re.search(r"(?P<ID>[\d]+)",Time_output).group())
             Money = int(re.search(r"(?P<ID>[\d]+)", Money_output).group())
-            Punishment = Money = int(re.search(r"(?P<ID>[\d]+)", Punishment_output).group())
+            Punishment = int(re.search(r"(?P<ID>[\d]+)", Punishment_output).group())
 
             track_list.append(Track(ID,Start_a,Start_b,Finish_a,Finish_b,Time,Money,Punishment))
         total_money = 0
         total_time = 0
         latest_finish = 0
+        total_puhishment = 0
         for track in track_list:
             total_money += track.reward
+            total_puhishment += track.punishment
             total_time += Distance(track.starting_point,track.ending_point)
             if track.start_time + Distance(track.starting_point,track.ending_point) > latest_finish:
                 latest_finish = track.start_time + Distance(track.starting_point,track.ending_point)
 
-        print("Total money to make: " + str(total_money) + " Total time: " + str(total_time) + " Latest Finish: " + str(latest_finish))
+        print("Total money to make: " + str(total_money) + " Total punishment: "+ str(total_puhishment)+ " Total time: " + str(total_time) + " Latest Finish: " + str(latest_finish))
         return track_list
 
 class LoadCabsFromFile:

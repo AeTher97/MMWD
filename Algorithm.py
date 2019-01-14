@@ -14,13 +14,13 @@ selection_functions = [RankingSelection, Roulette_wheel_selection]
 class Config(Enum):
     # New generation creation
     Number_of_initial_solutions = 30
-    Number_of_children = 40
-    Selection_method = 2
-    Chance_of_crossing = 20
-    Chance_of_mutation = 20
+    Number_of_children = 10
+    Selection_method = 1
+    Chance_of_crossing = 5
+    Chance_of_mutation = 40
     # Mutation weights
     Mutation_1 = 1
-    Mutation_2 = 25
+    Mutation_2 = 5
     Mutation_3 = 15
     Mutation_4 = 4
     # Cross weights
@@ -72,6 +72,16 @@ class Algorithm:
             print("Cab " + str(item.ID) + " Start point:" + str(item.start_point))
             item.ShowTracks()
             print("\n")
+
+    def SaveSolution(self,solution,iteration):
+        file = open("Result.txt","a")
+        file.write("SOLUTION: iteration: " + str(iteration) + "\n")
+        for item in solution.Cabs:
+            file.write("Cab " + str(item.ID) + " Start point:" + str(item.start_point) + "\n")
+            for track in item.Tracks:
+                file.write("ID:"+str(track.ID)+" Start: " + str(track.starting_point)  + "Finish: " + str(track.ending_point) + " Time: " + str(track.start_time))
+                file.write("\n")
+            file.write("\n")
 
 
 
