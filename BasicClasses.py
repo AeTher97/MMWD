@@ -41,7 +41,7 @@ class Cab:
 
     def ShowTracks(self):
         for item in self.Tracks:
-            print("ID:"+str(item.ID)+" Start: " + str(item.starting_point),"Finish: " + str(item.ending_point))
+            print("ID:"+str(item.ID)+" Start: " + str(item.starting_point),"Finish: " + str(item.ending_point) + " Time: " + str(item.start_time))
 
 def WeightedChoice(objects, weights):
     totals = []

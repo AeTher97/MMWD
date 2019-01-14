@@ -1,5 +1,6 @@
 import copy
 
+import numpy as np
 from EvaluationMock import EvaluateSolution
 from BasicClasses import WeightedChoice
 from enum import Enum
@@ -9,7 +10,7 @@ class Config(Enum):
     # Selection Funcions parameters
     Number_to_pass_ranking = 15
     Number_to_pass_roulette = 15
-    Number_of_untouchable_solutions = 3
+    Number_of_untouchable_solutions = 10
 
 
 def RankingSelection(solutions, tracks, alg):

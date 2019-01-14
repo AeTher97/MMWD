@@ -1,5 +1,4 @@
 import copy
-
 from BasicClasses import Cab, WeightedChoice
 from enum import Enum
 import random
@@ -13,8 +12,6 @@ from EvaluationMock import Distance
 selection_functions = [RankingSelection, Roulette_wheel_selection]
 
 class Config(Enum):
-    # Problem Data
-    Number_of_cabs = 2
     # New generation creation
     Number_of_initial_solutions = 30
     Number_of_children = 40
@@ -22,8 +19,8 @@ class Config(Enum):
     Chance_of_crossing = 20
     Chance_of_mutation = 20
     # Mutation weights
-    Mutation_1 = 6
-    Mutation_2 = 10
+    Mutation_1 = 1
+    Mutation_2 = 25
     Mutation_3 = 15
     Mutation_4 = 4
     # Cross weights
@@ -68,16 +65,14 @@ class Algorithm:
 
             self.solutions.append(solution)
 
-    def ShowSolution(self):
-        i = 1
-        for solution in self.solutions:
+    def ShowSolution(self,solution):
 
-            print("SOLUTION: ", str(i))
-            for item in solution.Cabs:
-                print("Cab " + str(item.ID) + " Start point:" + str(item.start_point))
-                item.ShowTracks()
-                print("\n")
-            i = i + 1
+        print("SOLUTION: ")
+        for item in solution.Cabs:
+            print("Cab " + str(item.ID) + " Start point:" + str(item.start_point))
+            item.ShowTracks()
+            print("\n")
+
 
 
 
@@ -191,7 +186,7 @@ class Mutation_2:
         new_solution = copy.deepcopy(solution)
         cab_1 = random.choice(new_solution.Cabs)
         cab_2 = random.choice(new_solution.Cabs)
-        while cab_1 == cab_2 and Config.Number_of_cabs.value != 1:
+        while cab_1 == cab_2 and solution.number_of_cabs != 1:
             cab_2 = random.choice(new_solution.Cabs)
         if(len(cab_1.Tracks)>0 and len(cab_2.Tracks)>0):
             track_1 = random.choice(cab_1.Tracks)
@@ -209,15 +204,20 @@ class Mutation_3:
     weight = Config.Mutation_3.value
 
     def Mutate(self,solution):
+        done = 0
         new_solution = copy.deepcopy(solution)
         cab = random.choice(new_solution.Cabs)
         if(len(cab.Tracks)>=2):
-            track_number = random.randint(0,len(cab.Tracks)-1)
+            track_number = random.randint(0, len(cab.Tracks)-1)
             track_number_2 = random.randint(0, len(cab.Tracks) - 1)
-            while track_number_2 == track_number:
-                track_number_2 = random.randint(0,len(cab.Tracks)-1)
-            if(cab.Tracks[track_number].start_time > cab.Tracks[track_number_2].start_time):
-                cab.Tracks[track_number] , cab.Tracks[track_number_2] =  cab.Tracks[track_number_2] , cab.Tracks[track_number]
+            i = 0
+            while i < 3:
+                while track_number_2 == track_number:
+                    track_number_2 = random.randint(0,len(cab.Tracks)-1)
+                if(cab.Tracks[track_number].start_time > cab.Tracks[track_number_2].start_time):
+                    cab.Tracks[track_number], cab.Tracks[track_number_2] = cab.Tracks[track_number_2], cab.Tracks[track_number]
+                    break
+                i += 1
 
         return new_solution
 
