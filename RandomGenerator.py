@@ -5,7 +5,7 @@ from BasicClasses import Track
 
 
 def RandomGenerate(number, board_size_x, board_size_y,time):
-    file = open('Tracks4.txt', 'w')
+    file = open('test1.txt', 'w')
     max = 0
     total_time = 0
     latest_finish = 0
@@ -16,7 +16,7 @@ def RandomGenerate(number, board_size_x, board_size_y,time):
         track.starting_point[1] = random.randint(1, board_size_y)
         track.ending_point[0] = random.randint(1, board_size_x)
         track.ending_point[1] = random.randint(1, board_size_y)
-        track.start_time = random.randint(0,time)
+        track.start_time = random.randint(latest_finish+50,latest_finish+200)
 
         money = math.floor((random.random()+0.2) * math.floor(
         abs(track.ending_point[1] - track.starting_point[1]) + abs(track.ending_point[0] - track.starting_point[0])))

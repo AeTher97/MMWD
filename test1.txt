@@ -1,0 +1,14 @@
+ID:1 Start:48,25 Finish:10,46 Time:90 Money:63 Punishment:75
+ID:2 Start:6,16 Finish:16,30 Time:298 Money:15 Punishment:18
+ID:3 Start:18,1 Finish:42,28 Time:395 Money:58 Punishment:69
+ID:4 Start:27,3 Finish:49,13 Time:607 Money:33 Punishment:39
+ID:5 Start:9,36 Finish:8,24 Time:732 Money:7 Punishment:8
+ID:6 Start:29,36 Finish:6,15 Time:881 Money:14 Punishment:16
+ID:7 Start:22,44 Finish:34,44 Time:1035 Money:10 Punishment:12
+ID:8 Start:4,28 Finish:19,5 Time:1194 Money:14 Punishment:16
+ID:9 Start:43,40 Finish:8,46 Time:1321 Money:43 Punishment:51
+ID:10 Start:14,23 Finish:18,47 Time:1505 Money:14 Punishment:16
+ID:11 Start:40,44 Finish:35,50 Time:1615 Money:7 Punishment:8
+ID:12 Start:41,35 Finish:3,47 Time:1775 Money:39 Punishment:46
+ID:13 Start:44,19 Finish:39,12 Time:1905 Money:10 Punishment:12
+ID:14 Start:41,3 Finish:6,36 Time:2081 Money:58 Punishment:69

@@ -2,6 +2,7 @@ import copy
 import math
 from time import sleep
 import progressbar
+import random
 from ProgressBar import print_progress_bar
 from Algorithm import Algorithm
 from Algorithm import Mutation
@@ -14,15 +15,16 @@ from RandomGenerator import RandomGenerate
 
 
 
-#RandomGenerate(30,50,50,2000)
-iterations = 500
+#RandomGenerate(15,50,50,2000)
+iterations = 2000
 
 x = []
 best_solution_data = []
 
 
-cabs_list = LoadCabsFromFile.Load('Cabs.txt')
-track_list = LoadTracksFromFile.Load('Tracks3.txt')
+cabs_list = LoadCabsFromFile.Load('Cabs1.txt')
+track_list = LoadTracksFromFile.Load('test1.txt')
+random.shuffle(track_list)
 bar = progressbar.ProgressBar(max_value=iterations).start()
 cos = Algorithm(track_list,cabs_list,50,50)
 average_data = [[],[],[],[],[],[],[],[]]
@@ -31,7 +33,7 @@ for i in range(0,iterations):
 
     cos.NewGeneration()
 
-    if(i%20 == 0):
+    if(i%10 == 0):
         x.append(i)
         wynik = copy.deepcopy(cos.solutions)
         fitness_sum = 0
@@ -43,17 +45,20 @@ for i in range(0,iterations):
         wynik.sort(key=lambda x: x.fitness, reverse=True)
         average_data[0].append(fitness_sum/len(wynik))
         j = 1
-        for item in solution.quality_factors:
-            average_data[j].append(item)
-            j += 1
+
 
         solution = wynik[0]
         best = cos.best_solution
-        best_solution_data.append(solution.fitness)
-        cos.SaveSolution(best,i)
+        for item in solution.quality_factors:
+            average_data[j].append(item)
+            j += 1
+        if (i % 500 == 0):
+            cos.SaveSolution(best,i)
         if best!= None:
+            best_solution_data.append(best.fitness)
             print(" Best" +  str([best.fitness, best.quality_factors]))
-
+        else:
+            best_solution_data.append(0)
 
 
 

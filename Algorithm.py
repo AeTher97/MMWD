@@ -14,15 +14,15 @@ selection_functions = [RankingSelection, Roulette_wheel_selection]
 class Config(Enum):
     # New generation creation
     Number_of_initial_solutions = 30
-    Number_of_children = 10
+    Number_of_children = 30
     Selection_method = 1
     Chance_of_crossing = 5
-    Chance_of_mutation = 40
+    Chance_of_mutation = 30
     # Mutation weights
     Mutation_1 = 1
-    Mutation_2 = 5
-    Mutation_3 = 15
-    Mutation_4 = 4
+    Mutation_2 = 4
+    Mutation_3 = 25
+    Mutation_4 = 3
     # Cross weights
     Cross_1 = 1
 
@@ -120,7 +120,6 @@ class Algorithm:
                 if (solution == None):
                     continue
                 new_solution = choosed_mutation.Mutate(solution)
-                CompleteSolution(new_solution,self.list_of_tracks)
                 children.append(new_solution)
         for solution in untouchable:
             children.append(solution)
@@ -224,8 +223,13 @@ class Mutation_3:
             while i < 3:
                 while track_number_2 == track_number:
                     track_number_2 = random.randint(0,len(cab.Tracks)-1)
-                if(cab.Tracks[track_number].start_time > cab.Tracks[track_number_2].start_time):
+                if(cab.Tracks[track_number].start_time > cab.Tracks[track_number_2].start_time) and track_number < track_number_2:
                     cab.Tracks[track_number], cab.Tracks[track_number_2] = cab.Tracks[track_number_2], cab.Tracks[track_number]
+
+                    break
+                elif (cab.Tracks[track_number].start_time < cab.Tracks[track_number_2].start_time) and track_number > track_number_2:
+                    cab.Tracks[track_number], cab.Tracks[track_number_2] = cab.Tracks[track_number_2], cab.Tracks[
+                        track_number]
                     break
                 i += 1
 
